@@ -41,8 +41,11 @@ function setupLenis(){
   if(want&&!lenis){lenis=new Lenis({lerp:.075,smoothWheel:true,wheelMultiplier:.9,autoRaf:false,anchors:false});lenis.on('scroll',paint);if(mode==='intro')lenis.stop();}
   else if(!want&&lenis){lenis.destroy();lenis=null;}
 }
-const tx=(el,x,y=0)=>{el.style.transform=`translate3d(${x}px,${y}px,0)`;};
-const op=(el,n)=>{el.style.opacity=String(n);};
+// Every per-frame style write goes through a cache: an unchanged value costs nothing (no style invalidation).
+const setTf=(el,v)=>{if(el._tf!==v){el._tf=v;el.style.transform=v;}};
+const r2=n=>Math.round(n*100)/100;
+const tx=(el,x,y=0)=>setTf(el,`translate3d(${r2(x)}px,${r2(y)}px,0)`);
+const op=(el,n)=>{const v=String(Math.round(n*1000)/1000);if(el._op!==v){el._op=v;el.style.opacity=v;}};
 
 // Masked line rises for the lower sections: wrap each .rise's text once.
 const rises=[...document.querySelectorAll('.rise')].map(el=>{const s=document.createElement('span');s.textContent=el.textContent;el.textContent='';el.append(s);return s;});
@@ -59,12 +62,13 @@ const seen01=(top,band)=>clamp((vh*.96-top)/(vh*band));
 // Desktop header: name slot + current-section marker. Elements are cached; writes happen only on change.
 const head=$('amd-head'), headName=$('head-name'), headLinks=[...head.querySelectorAll('[data-sec]')];
 const sections=headLinks.map(a=>$(a.dataset.sec));
-let headCurrent=null;
+let headCurrent=null, headH=60;const headLink=head.querySelector('.head-name');
 
 // Loader geometry: every name copy is the lockup's own ANNA/MARIA at the lockup's exact size, and the middle track is
 // solved so its copy no. 2 stops dead centre on the lockup's name lines. Track speeds keep Kove's curves, scaled by k.
-const loaderLogo=$('loader-logo');let geo=null;
+const loaderLogo=$('loader-logo'), heroFootP=$('hero-footer').querySelector('p');let geo=null;
 function measure(){
+  headH=innerHeight*.064+Math.max(innerWidth*.0115,15)*1.4;
   const r=(desktop?stage:loader).getBoundingClientRect();w=r.width||innerWidth;h=r.height||innerHeight;vh=innerHeight;
   if(!loader.isConnected||!w)return;
   const lw=loaderLogo.offsetWidth, H=loaderLogo.offsetHeight, gap=lw*.1805, k=lw/(GEOMETRY.logo*w);
@@ -80,7 +84,7 @@ function drawLoader(time,s){
   if(!s.bands)return;
   if(!geo||!geo.lw)measure();
   const middleScale=s.expansion>0?1+s.expansion*2:s.bandHeight;
-  $('band-light').style.transform=`scaleY(${middleScale})`;
+  setTf($('band-light'),`scaleY(${r2(middleScale*1000)/1000})`);
   // Names are sibling layers of the light field, so the field grows without stretching type.
   const topX=sample(LOGO_TRACK_TOP,time), middleX=sample(LOGO_TRACK_MIDDLE,time);
   tracks.forEach((track,row)=>{
@@ -94,7 +98,7 @@ function drawLoader(time,s){
   });
   $('loader-logo').style.visibility=time>=9.31?'visible':'hidden';
   op($('loader-logo'),s.logoResolve);
-  loaderLogo.style.transform=`translate(-50%,calc(-50% + ${geo.shift*(1-smooth(progress(time,9.47,10.05)))}px))`;
+  setTf(loaderLogo,`translate(-50%,calc(-50% + ${geo.shift*(1-smooth(progress(time,9.47,10.05)))}px))`);
   op($('loader-caption'),smooth(progress(time,9.76,10.1)));
 }
 function drawDesktop(time){
@@ -107,9 +111,9 @@ function drawDesktop(time){
   tx($('portrait-copy'),-(time*.065*w)%(.74*w));
   // The spread's photograph settles as the panel arrives; the tall ring rises into its frame a beat later.
   const k=smooth(progress(s.pan,.62,1.121)), k2=smooth(progress(s.pan,.82,1.121));
-  landImg.style.transform=`translate3d(${(1-k)*-5}%,0,0) scale(${1.2-.2*k})`;
-  portImg.style.transform=`translate3d(0,${(1-k2)*7}%,0) scale(${1.28-.28*k2})`;
-  sinceChars.forEach((c,i)=>{const e=ease3(progress(time,2.7+i*.07,3.45+i*.07));c.style.transform=`translate3d(0,${(1-e)*105}%,0)`;});
+  setTf(landImg,`translate3d(${(1-k)*-5}%,0,0) scale(${1.2-.2*k})`);
+  setTf(portImg,`translate3d(0,${(1-k2)*7}%,0) scale(${1.28-.28*k2})`);
+  sinceChars.forEach((c,i)=>{const e=ease3(progress(time,2.7+i*.07,3.45+i*.07));setTf(c,`translate3d(0,${(1-e)*105}%,0)`);});
   tx($('shop-copy'),-(time*.019*w)%(.23*w));
   tx($('black-wipe'),0,time>=6.8?0:(1-s.wipe)*h*1.01);
   $('black-wipe').style.visibility=s.galleryEntrance?'hidden':'visible';
@@ -119,19 +123,18 @@ function drawDesktop(time){
     tx(world,0);
     tx($('gallery'),(1-s.entrance)*(1-GEOMETRY.hero)*w);
     const centre=(.5-GEOMETRY.hero*.5)*(1-s.logoEntrance)*w;
-    $('hero-wordmark').style.transform=`translate(calc(-50% + ${centre}px),-50%)`;
-    $('hero-footer').querySelector('p').style.transform=`translateX(calc(-50% + ${centre}px))`;
+    setTf($('hero-wordmark'),`translate(calc(-50% + ${r2(centre)}px),-50%)`);
+    setTf(heroFootP,`translateX(calc(-50% + ${r2(centre)}px))`);
     tx($('hero-footer').lastElementChild,(1-s.entrance)*(1-GEOMETRY.hero)*w);
   }else{
     tx($('gallery'),0);
-    $('hero-wordmark').style.transform='translate(-50%,-50%)';
-    $('hero-footer').querySelector('p').style.transform='translateX(-50%)';
+    setTf($('hero-wordmark'),'translate(-50%,-50%)');
+    setTf(heroFootP,'translateX(-50%)');
     tx($('hero-footer').lastElementChild,0);
   }
   // The centre line is the loader caption's exact twin, so it stays; only the edge items and nav fade in.
   op($('hero-nav'),s.heroUI);[...$('hero-footer').children].forEach(ch=>op(ch,ch.tagName==='P'?1:s.heroUI));
-  hero.inert=s.pan>.35;
-  $('collection').inert=!(s.pan>.9&&time<5.6);
+  const hi=s.pan>.35, ci=!(s.pan>.9&&time<5.6);if(hero.inert!==hi)hero.inert=hi;const col=$('collection');if(col.inert!==ci)col.inert=ci;
 }
 function drawHead(secRects,pinEnd){
   const s=stateAt(t), inPin=scrollY<pinEnd+2;
@@ -139,14 +142,14 @@ function drawHead(secRects,pinEnd){
   op(head,mode==='intro'||mode==='hold'?(t>=10.82?s.heroUI:0):1);
   // One logo per screen: the name rises in once the big lockup has panned away, and steps aside while the rail carries it.
   const show=reduced?(inPin&&t<1?0:1):inPin?smooth(progress(s.pan,.28,.42))*(1-smooth(s.rail)):1;
-  headName.style.transform=`translate3d(0,${(1-show)*170}%,0)`;
-  head.querySelector('.head-name').tabIndex=show>.5?0:-1;
+  setTf(headName,`translate3d(0,${(1-show)*170}%,0)`);
+  const ti=show>.5?0:-1;if(headLink.tabIndex!==ti)headLink.tabIndex=ti;
   // Bar mode once the stage has been wiped to black (or below the pin); tone = the section under the header's bottom edge.
   // Only in normal scrolling: during the intro the clock runs 6.8–12.2, which is NOT the end of the pin.
-  const bar=mode==='scroll'&&(!inPin||t>=6.6), hb=head.offsetHeight;
-  head.classList.toggle('is-bar',bar);
+  const bar=mode==='scroll'&&(!inPin||t>=6.6), hb=headH;
+  if(head.classList.contains('is-bar')!==bar)head.classList.toggle('is-bar',bar);
   let light=false;if(bar)secRects.forEach((r,i)=>{if(r.top<=hb&&r.bottom>hb)light=sections[i].id!=='about';});
-  head.classList.toggle('tone-light',light);
+  if(head.classList.contains('tone-light')!==light)head.classList.toggle('tone-light',light);
   // Current section = the one crossing 45% of the viewport.
   let cur=null;secRects.forEach((r,i)=>{if(r.top<=vh*.45&&r.bottom>vh*.45)cur=headLinks[i];});
   if(cur!==headCurrent){headCurrent?.removeAttribute('aria-current');cur?.setAttribute('aria-current','location');headCurrent=cur;}
@@ -164,9 +167,9 @@ function drawMobile(time,galleryRect,mob){
   tx($('portrait-copy'),-(scrollY*.35)%(pw*1.4));
   tx($('shop-copy'),-(scrollY*.12)%(pw*.9));
   const k=ease3(seen01(mob.land,.6)), k2=ease3(seen01(mob.port,.6)), ks=seen01(mob.since,.3);
-  landImg.style.transform=`scale(${1.2-.2*k})`;
-  portImg.style.transform=`translate3d(0,${(1-k2)*7}%,0) scale(${1.28-.28*k2})`;
-  sinceChars.forEach((c,i)=>{const e=ease3(clamp(ks*1.5-i*.08));c.style.transform=`translate3d(0,${(1-e)*105}%,0)`;});
+  setTf(landImg,`scale(${1.2-.2*k})`);
+  setTf(portImg,`translate3d(0,${(1-k2)*7}%,0) scale(${1.28-.28*k2})`);
+  sinceChars.forEach((c,i)=>{const e=ease3(clamp(ks*1.5-i*.08));setTf(c,`translate3d(0,${(1-e)*105}%,0)`);});
 }
 function tick(now){
   raf=0;
@@ -208,18 +211,18 @@ function tick(now){
   }
   // ---- writes ----
   if(desktop)drawDesktop(t);else drawMobile(t,galleryRect,mob);
-  rises.forEach((s,i)=>{const p=reduced?1:clamp((vh*.94-riseTops[i])/(vh*.22));s.style.transform=`translate3d(0,${(1-p)*110}%,0)`;});
+  rises.forEach((s,i)=>{const p=reduced?1:clamp((vh*.94-riseTops[i])/(vh*.22));setTf(s,`translate3d(0,${(1-p)*110}%,0)`);});
   if(desktop)drawHead(secRects,pinTop+pin.offsetHeight-vh);
   const cols=desktop?4:2, ap=clamp((vh-aboutRect.top)/(vh+aboutRect.height));
   curtains.forEach((c,i)=>{
     // Cards in a row lift left to right (one column = 12% of the band later); all tied to position, so it reverses.
     const e=reduced?1:ease3(clamp(seen01(curTops[i],c.idx<0?.6:.5)-(c.idx<0?0:(c.idx%cols)*.12)));
-    c.cur.style.transform=`scaleY(${1-e})`;
-    if(c.el===aboutFig)c.img.style.transform=reduced?'none':`translate3d(0,${(ap-.5)*-6}%,0) scale(${1.16-.16*e})`;
-    else c.img.style.transform=e>=1?'':`scale(${1.14-.14*e})`;
+    setTf(c.cur,`scaleY(${1-e})`);
+    if(c.el===aboutFig)setTf(c.img,reduced?'none':`translate3d(0,${(ap-.5)*-6}%,0) scale(${1.16-.16*e})`);
+    else setTf(c.img,e>=1?'':`scale(${1.14-.14*e})`);
   });
   const vt=seen01(visitTop,.45);
-  visitChars.forEach((c,i)=>{const e=reduced?1:ease3(clamp(vt*1.6-i*.035));c.style.transform=`translate3d(0,${(1-e)*110}%,0)`;});
+  visitChars.forEach((c,i)=>{const e=reduced?1:ease3(clamp(vt*1.6-i*.035));setTf(c,`translate3d(0,${(1-e)*110}%,0)`);});
   if(lenis&&lenis.isScrolling)busy=true;
   // Lenis emits 'scroll' inside lenis.raf → paint() may already have queued the next frame: never queue two.
   if(busy&&!raf)raf=requestAnimationFrame(tick);
@@ -254,5 +257,10 @@ document.addEventListener('click',e=>{
   lenis.scrollTo(el,{duration:1.6,easing:x=>x<.5?8*x*x*x*x:1-Math.pow(-2*x+2,4)/2});paint();
 });
 setupLenis();measure();paint();
+// Decode every photograph in idle time once the first screen is up (one at a time), so none decodes mid-scroll.
+(()=>{const imgs=[...document.images].filter(i=>!i.closest('#loader'));let k=0;
+  const idle=window.requestIdleCallback||(f=>setTimeout(f,120));
+  const next=()=>{if(k>=imgs.length)return;const im=imgs[k++];im.loading='eager';(im.decode?im.decode():Promise.resolve()).catch(()=>{}).then(()=>idle(next));};
+  const start=()=>idle(next);(mode==='intro')?setTimeout(start,6000):setTimeout(start,800);})();
 // QA hook: hold the clock at a time (intro frames) or release it back to scroll.
 window.amd={lenis:()=>lenis,state:()=>({mode,t,target,desktop,reduced,lenis:!!lenis,...stateAt(t)}),hold:x=>{mode='hold';t=x;loaderFade=1;paint();},release:()=>{mode='scroll';t=0;paint();}};

@@ -48,7 +48,7 @@ h1,h2{text-wrap:balance}
 .collection-top p{font-size:max(.58cqw,10px);letter-spacing:.06em;line-height:1.25;text-align:right;margin:2.4cqh .3cqw 0}
 .landscape-frame{height:54.7cqh;width:100%;overflow:hidden;background:#dcdcd8}
 .landscape-frame img{width:100%;height:100%;object-fit:cover;object-position:58% 45%;will-change:transform;transform-origin:62% 50%}
-.spring .ch,.chars .ch{display:inline-block;will-change:transform}
+.spring .ch,.chars .ch{display:inline-block}
 .spring{overflow:clip;overflow-clip-margin:0;padding-top:.24em;margin-top:-.24em}
 .image-captions{display:flex;justify-content:space-between;font-size:max(.56cqw,10px);letter-spacing:.06em;padding:.9cqh 0 0;line-height:1.15}
 .collection-bottom{position:absolute;inset:74cqh .7cqw 0}
@@ -76,42 +76,44 @@ h1,h2{text-wrap:balance}
 .logo-copy-mask svg{width:100%;height:auto;fill:currentColor;overflow:visible}
 /* First paint of a first visit is already the loader's black: no flash of the hero before the script runs. */
 .amd-intro .loader{display:block}
-.amd-intro .amd-head{opacity:0}
+.amd-intro .amd-head{visibility:hidden}
 .loader-logo{position:absolute;left:50%;top:50%;width:22cqw;transform:translate(-50%,-50%);visibility:hidden}
 .loader-caption{position:absolute;left:50%;bottom:3.7cqh;transform:translateX(-50%);font-size:max(.62cqw,10px);letter-spacing:.06em;line-height:1.25;text-align:center;margin:0;opacity:0;color:var(--amd-ink)}
 
 /* ---------- Desktop header (constant; the mobile glass bar replaces it under 900px / portrait) ---------- */
-.amd-head{position:fixed;inset:0 0 auto 0;z-index:6;display:flex;justify-content:space-between;align-items:center;padding:3.8vh 2.1vw 0;pointer-events:none;color:#fff;mix-blend-mode:difference;font-size:max(.68vw,10px);letter-spacing:.06em;line-height:1;white-space:nowrap}
-.amd-head a{pointer-events:auto;position:relative}
+/* The wrapper is NOT fixed (no stacking context), so the two small fixed blocks blend straight against the stage.
+   Only ~two small blend surfaces per frame instead of one full-width one (that was a 270 ms GPU pass). */
+.amd-head{--head-h:calc(6.4vh + max(1.15vw,15px) * 1.4);font-size:max(.68vw,10px);letter-spacing:.06em;line-height:1;white-space:nowrap}
+.amd-head .head-name,.amd-head nav{position:fixed;top:3.8vh;z-index:6;color:#fff;mix-blend-mode:difference}
+.amd-head .head-name{left:2.1vw}
+.amd-head nav{right:2.1vw;display:flex;gap:1.9vw;align-items:center;height:max(1.15vw,15px)}
+.amd-head a{position:relative}
 .amd-head a::after{content:'';position:absolute;inset:-16px -8px}
-.amd-head nav{display:flex;gap:1.9vw}
 .amd-head nav a{display:flex;align-items:center;gap:.7vw}
 /* Current section: the Kove crosshair moves to it. */
 .amd-head nav a::before{content:'';width:.82vw;height:.82vw;min-width:6px;min-height:6px;background:radial-gradient(circle,currentColor 1px,transparent 1.25px) center/100% 100%,radial-gradient(circle,currentColor .65px,transparent .8px) left top/33% 33%;transform:scale(0);transition:transform 220ms cubic-bezier(.23,1,.32,1)}
 .amd-head nav a[aria-current]::before{transform:scale(1)}
 .head-name{display:block;overflow:clip;overflow-clip-margin:0;padding:.3em 0;margin:-.3em 0}
-.head-name span{display:block;font-family:var(--amd-serif);font-size:max(1.15vw,15px);letter-spacing:.22em;will-change:transform;transform:translate3d(0,170%,0)}
-/* After the pin the header is a solid band (switched while the wipe has the screen fully black, so the change is invisible).
-   Ink band on dark sections, light band on light ones; content scrolls cleanly beneath it. */
-.amd-head::before{content:'';position:absolute;inset:0;z-index:-1;background:var(--amd-ink);border-bottom:1px solid rgba(241,241,239,.12);opacity:0}
-.amd-head.is-bar{mix-blend-mode:normal;color:var(--amd-light);padding-bottom:2.6vh}
+.head-name span{display:block;font-family:var(--amd-serif);font-size:max(1.15vw,15px);letter-spacing:.22em;transform:translate3d(0,170%,0)}
+/* After the pin: a solid band (switched while the wipe has the screen black, so the change is invisible).
+   Ink band on dark sections, light band on light ones; nothing blends any more. */
+.amd-head::before{content:'';position:fixed;inset:0 0 auto 0;height:var(--head-h);z-index:5;background:var(--amd-ink);border-bottom:1px solid rgba(241,241,239,.12);opacity:0;pointer-events:none}
 .amd-head.is-bar::before{opacity:1;transition:background-color 220ms cubic-bezier(.23,1,.32,1),border-color 220ms cubic-bezier(.23,1,.32,1)}
-.amd-head.is-bar.tone-light{color:var(--amd-ink)}
+.amd-head.is-bar .head-name,.amd-head.is-bar nav{mix-blend-mode:normal;color:var(--amd-light);transition:color 220ms cubic-bezier(.23,1,.32,1)}
+.amd-head.is-bar.tone-light .head-name,.amd-head.is-bar.tone-light nav{color:var(--amd-ink)}
 .amd-head.is-bar.tone-light::before{background:var(--amd-light);border-bottom-color:rgba(9,10,9,.12)}
-.amd-head.is-bar{transition:color 220ms cubic-bezier(.23,1,.32,1)}
 .hero-nav{justify-content:flex-start}
 /* ---------- Sections after the stage ---------- */
 .label{font-size:11px;letter-spacing:.12em;margin:0 0 28px}
 .rise{display:inline-block;overflow:clip;overflow-clip-margin:0;padding:.24em 0 .12em;margin:-.24em 0 -.12em;vertical-align:top}
-.rise>span{display:inline-block;will-change:transform}
+.rise>span{display:inline-block}
 .about{background:var(--amd-ink);color:var(--amd-light);display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:5vw;padding:14vh 4vw 16vh;align-items:start}
 .about-photo{position:relative;margin:0;overflow:hidden;aspect-ratio:1.5;background:var(--amd-ink-2)}
 .about-photo img{width:100%;height:100%!important;object-fit:cover;will-change:transform;transform-origin:50% 40%}
 /* Reveal curtains echo the loader bands: light lifts off on the black section, ink lifts off on the light one. */
-.curtain{position:absolute;left:0;right:0;top:0;height:100%;background:var(--amd-light);transform-origin:50% 0;pointer-events:none;will-change:transform}
+.curtain{position:absolute;left:0;right:0;top:0;height:100%;background:var(--amd-light);transform-origin:50% 0;pointer-events:none}
 .pieces li{position:relative;overflow:hidden}
 .pieces .curtain{height:auto;aspect-ratio:4/5;background:var(--amd-ink)}
-.pieces img{will-change:transform}
 .chars{overflow:clip;overflow-clip-margin:0;padding:.24em 0 .14em;margin-top:-.24em}
 .about h2,.shop h2,.visit h2{font-family:var(--amd-serif);font-weight:400;letter-spacing:.01em;margin:0 0 40px;line-height:1.08}
 .about h2{font-size:clamp(34px,3.6vw,64px)}
