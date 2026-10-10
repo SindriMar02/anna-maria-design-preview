@@ -130,7 +130,8 @@ function drawHead(secRects,pinEnd){
 function drawMobile(time,galleryRect,mob){
   if(mode==='intro'){const s=stateAt(time);drawLoader(time,s);loader.style.display='block';}
   op(loader,smooth(loaderFade));
-  if(loaderFade<=0)loader.style.display='none';
+  // iOS: a hidden-but-present fixed loader can keep tinting Safari's chrome; remove it once the intro is over.
+  if(loaderFade<=0&&mode!=='intro'&&loader.isConnected)loader.remove();
   // Counter-moving columns tied to the gallery's position in the viewport (reversible, no duration).
   const p=clamp((vh-galleryRect.top)/(vh+galleryRect.height));
   const amp=galleryRect.height*.28;

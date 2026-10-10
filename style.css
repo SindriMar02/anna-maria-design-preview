@@ -190,7 +190,10 @@ h1,h2{text-wrap:balance}
   .portrait-strip{height:auto;padding:14px 0;font-size:12vw}
   .portrait-frame{height:auto;aspect-ratio:.74}
   .rail,.black-wipe{display:none}
-  .loader{position:fixed;inset:0;z-index:12;container-type:size}
+  /* Intro sits under the constant bar + awning; its lockup matches the hero lockup's size and centre so the fade is seamless. */
+  .loader{position:fixed;inset:106px 0 0 0;z-index:12;container-type:size}
+  .loader-logo{width:min(62vw,300px);top:calc(50% - 55px)}
+  .loader-caption{display:none}
   .logo-copy-mask svg{width:min(30cqw,60cqh)}
   .about{grid-template-columns:1fr;padding:72px 16px 80px;gap:36px}
   .about-photo{aspect-ratio:1.2}
@@ -206,6 +209,19 @@ h1,h2{text-wrap:balance}
   .visit h2{font-size:clamp(28px,10.5vw,64px);white-space:normal}
   .visit-grid{grid-template-columns:1fr;gap:20px}
   .amd-footer{flex-direction:column}
+}
+/* Phone landscape: the whole lockup fits above the fold; display type is capped by height, not width. */
+@media (max-width:899px) and (orientation:landscape) and (max-height:500px){
+  .hero{height:calc(100svh - 106px);min-height:0}
+  .hero-wordmark,.loader-logo{width:min(62vw,300px,calc((100svh - 176px) * 1.1))}
+  .loader-logo{top:calc(50% - 20px)}
+  .hero-wordmark{top:calc(50% - 10px)}
+  .hero-footer p{display:none}
+  .collection-top h2{font-size:min(13.2vw,19svh)}
+  .spring{font-size:min(21vw,24svh)}
+  .year{font-size:min(11vw,13svh)}
+  .portrait-strip{font-size:min(12vw,14svh)}
+  .portrait-frame{aspect-ratio:auto;height:calc(100svh - 106px)}
 }
 @media (prefers-reduced-motion:reduce){
   .rise>span,.about-photo img,.photo-column,#portrait-copy,#shop-copy,.ch,.pieces img,.landscape-frame img,.portrait-frame img{transform:none!important}
