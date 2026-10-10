@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#090a09">
+  <title>Anna María Design · Goldsmith · Skólavörðustígur 3</title>
+  <meta name="description" content="Icelandic design, pure and timeless. Jewellery in gold and silver by Anna María, made in her Reykjavík workshop since 1986.">
+  <link rel="icon" href="assets/favicon.png" type="image/png">
+  <link rel="preload" href="assets/fonts/marcellus-v14-latin_latin-ext-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/switzer-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/vendor/lenis.css">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <a class="amd-skip" href="#shop">Skip to the jewellery</a>
+
+  <!-- Mobile chrome standard: constant glass bar + sticky ink awning (hidden on desktop, where the stage carries the nav). -->
+  <header class="amd-bar">
+    <a class="amd-bar-mark" translate="no" href="#top" aria-label="Anna María Design, back to top">ANNA MARIA</a>
+    <button class="amd-burger" type="button" aria-expanded="false" aria-controls="amd-menu"><span></span><span></span><span class="sr-only">Menu</span></button>
+  </header>
+  <nav class="amd-menu" id="amd-menu" aria-label="Main" hidden>
+    <a href="#shop">Shop</a><a href="#about">About</a><a href="#visit">Visit</a>
+    <p>Skólavörðustígur 3<br>101 Reykjavík</p>
+  </nav>
+  <div class="amd-awning" aria-hidden="true"></div>
+  <!-- Desktop header: constant, never hides. Sits exactly where Kove's stage nav sits; difference blending keeps it legible on light and dark. -->
+  <header class="amd-head" id="amd-head">
+    <a class="head-name" href="#top" translate="no" aria-label="Anna María Design, back to top"><span id="head-name">ANNA MARIA</span></a>
+    <nav aria-label="Main"><a href="#shop" data-sec="shop">SHOP +</a><a href="#about" data-sec="about">ABOUT +</a><a href="#visit" data-sec="visit">VISIT +</a></nav>
+  </header>
+
+  <main id="top">
+    <!-- Desktop: pinned Kove stage, scroll drives one reversible clock. Mobile: the same DOM flows as a stack. -->
+    <section class="pin" id="pin" aria-label="Anna María Design">
+      <div class="stage" id="stage">
+        <div class="world" id="world">
+          <section class="hero" id="hero">
+            <nav class="hero-nav" id="hero-nav" aria-label="Sections">
+              <a class="brand-link" href="#visit"><span class="crosshair" aria-hidden="true"></span> SKÓLAVÖRÐUSTÍGUR 3 +</a>
+            </nav>
+            <h1 class="lockup hero-wordmark" id="hero-wordmark" translate="no"><svg viewBox="0 0 475 392" role="img" aria-label="Anna Maria Design, Goldsmith"><text x="0" y="100" textLength="475" lengthAdjust="spacing" font-size="138">ANNA</text><text x="0" y="222" textLength="475" lengthAdjust="spacing" font-size="138">MARIA</text><text x="475" y="282" text-anchor="end" font-size="52" letter-spacing="1">DESIGN</text><text x="0" y="387" textLength="468" lengthAdjust="spacing" font-size="56">GOLDSMITH</text></svg></h1>
+            <div class="hero-footer" id="hero-footer">
+              <span>SINCE 1986 +</span>
+              <p>ICELANDIC DESIGN<br>PURE AND TIMELESS</p>
+              <span>101 REYKJAVÍK</span>
+            </div>
+          </section>
+          <div class="gallery" id="gallery" aria-label="Jewellery by Anna María and her workshop">
+            <div class="photo-column column-one" id="column-one">
+              <img src="assets/img/g1-hands.jpg" fetchpriority="high" alt="Anna María shaping a silver wire at her bench" width="760" height="987">
+              <img src="assets/img/g1-pink.jpg" alt="Gold ring with a pink stone set between wave lines" width="760" height="987">
+              <img src="assets/img/g1-droplet.jpg" alt="Gold droplet pendant with a green diamond" width="760" height="988">
+              <img src="assets/img/g1-topaz.jpg" alt="Silver wave ring with a blue stone" width="680" height="884">
+              <img src="assets/img/g1-wave4.jpg" alt="Silver ring Wave IV with a green stone" width="760" height="987">
+            </div>
+            <div class="photo-column column-two" id="column-two">
+              <img src="assets/img/g2-flowneck.jpg" fetchpriority="high" alt="Silver necklace Flow" width="720" height="935">
+              <img src="assets/img/g2-flowear.jpg" alt="Silver Flow earrings" width="760" height="987">
+              <img src="assets/img/g2-pendant.jpg" alt="Gold pendant on a fine chain" width="760" height="988">
+              <img src="assets/img/g2-pearl.jpg" alt="Gold wave ring holding a grey pearl" width="760" height="988">
+              <img src="assets/img/g2-silverwave.jpg" alt="Sculpted silver wave ring" width="760" height="988">
+            </div>
+            <div class="photo-column column-three" id="column-three">
+              <img src="assets/img/g3-goldwave.jpg" fetchpriority="high" alt="Gold wave ring set with blue and white stones" width="760" height="987">
+              <img src="assets/img/g3-leikur.jpg" alt="Gold pendant with a small set stone" width="760" height="988">
+              <img src="assets/img/g3-leaf.jpg" alt="Silver Leaf earrings" width="760" height="987">
+              <img src="assets/img/g3-bara.jpg" alt="Silver ring Bára" width="760" height="988">
+              <img src="assets/img/g3-sapphire.jpg" alt="Silver wave ring with a deep blue stone" width="760" height="988">
+            </div>
+          </div>
+          <section class="collection" id="collection" aria-label="Handmade in her workshop since 1986">
+            <div class="collection-top"><h2 id="collection-title">HANDMADE</h2><p>IN HER WORKSHOP<br>SKÓLAVÖRÐUSTÍGUR 3</p></div>
+            <div class="landscape-frame reveal-frame"><img src="assets/img/hands-spread.jpg" alt="Anna María's hands bending a silver wire at the bench, finished rings beside her" width="2600" height="1529"></div>
+            <div class="image-captions"><span>ANNA MARÍA AT THE BENCH</span><a href="#about">ABOUT HER +</a></div>
+            <div class="collection-bottom"><span class="year" id="year">/86</span><span class="spring" id="since" aria-label="Since 1986">SINCE</span><span class="outerwear">WORKSHOP IN<br>REYKJAVÍK</span><a class="shop-strip" href="#visit"><span id="shop-copy">VISIT THE WORKSHOP / VISIT THE WORKSHOP / VISIT THE WORKSHOP / VISIT THE WORKSHOP</span><span class="crosshair" aria-hidden="true"></span></a></div>
+          </section>
+          <section class="portrait" aria-label="A gold wave ring">
+            <div class="portrait-strip" aria-hidden="true"><span id="portrait-copy">GOLD AND SILVER / ICELANDIC STONES / GOLD AND SILVER / ICELANDIC STONES /</span></div>
+            <div class="portrait-frame"><img id="portrait-img" src="assets/img/ring-tall.jpg" alt="Gold ring of five wave lines set with a white and two blue stones" width="1250" height="1689"></div>
+          </section>
+        </div>
+        <aside class="rail" id="rail" aria-hidden="true"><span class="crosshair"></span><svg class="rail-name" viewBox="0 0 475 228" aria-hidden="true"><text x="0" y="100" textLength="475" lengthAdjust="spacing" font-size="138">ANNA</text><text x="0" y="222" textLength="475" lengthAdjust="spacing" font-size="138">MARIA</text></svg><p>ICELANDIC DESIGN<br>PURE AND<br>TIMELESS</p></aside>
+        <div class="black-wipe" id="black-wipe" aria-hidden="true"></div>
+        <template id="name-copy"><svg viewBox="0 0 475 228" aria-hidden="true"><text x="0" y="100" textLength="475" lengthAdjust="spacing" font-size="138">ANNA</text><text x="0" y="222" textLength="475" lengthAdjust="spacing" font-size="138">MARIA</text></svg></template>
+        <div class="loader" id="loader" aria-hidden="true">
+          <div class="logo-band band-top"><div class="logo-track" id="track-top"></div></div>
+          <div class="band-light" id="band-light"></div>
+          <div class="logo-band band-middle"><div class="logo-track" id="track-middle"></div></div>
+          <div class="logo-band band-bottom"><div class="logo-track" id="track-bottom"></div></div>
+          <div class="lockup loader-logo" id="loader-logo"><svg viewBox="0 0 475 392" aria-hidden="true"><text x="0" y="100" textLength="475" lengthAdjust="spacing" font-size="138">ANNA</text><text x="0" y="222" textLength="475" lengthAdjust="spacing" font-size="138">MARIA</text><text x="475" y="282" text-anchor="end" font-size="52" letter-spacing="1">DESIGN</text><text x="0" y="387" textLength="468" lengthAdjust="spacing" font-size="56">GOLDSMITH</text></svg></div>
+          <p class="loader-caption" id="loader-caption">ICELANDIC DESIGN<br>PURE AND TIMELESS</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="about" id="about" aria-labelledby="about-title">
+      <figure class="about-photo reveal-frame" data-curtain><img src="assets/img/anna-maria-workshop.jpg" alt="Anna María smiling at her workbench in the Reykjavík workshop" width="2200" height="1467" loading="lazy"><span class="curtain" aria-hidden="true"></span></figure>
+      <div class="about-copy">
+        <p class="label">ABOUT +</p>
+        <h2 id="about-title"><span class="rise">Where modern design</span> <span class="rise">and craftsmanship</span> <span class="rise">delight the senses</span></h2>
+        <p>Anna María Sveinbjörnsdóttir was born in 1961, in Iceland. Faithful to herself, Anna Maria emphasizes her Danish and Icelandic know-how, her eye for the smallest detail, committed to capture pure perfection and surprise her customer with timeless design and unique quality.</p>
+        <p>In 1986 Anna Maria founded her jewelry workshop in Reykjavík. Her collections soon became sought after for their modern and classic design. Anna Maria has a variety of jewelry for both men and women. They encompass silver, gold, white gold, Icelandic stones as well as precious stones.</p>
+        <dl class="facts"><div><dt>Workshop</dt><dd>1986</dd></div><div><dt>Metals</dt><dd>Silver, gold, white gold</dd></div><div><dt>Stones</dt><dd>Icelandic and precious</dd></div></dl>
+      </div>
+    </section>
+
+    <section class="shop" id="shop" aria-labelledby="shop-title">
+      <div class="shop-head">
+        <h2 id="shop-title"><span class="rise">Small sample of our</span> <span class="rise">current selection</span></h2>
+        <p>Exceptional attention to detail and craftsmanship. An eye for the unexpected and the finest material.</p>
+      </div>
+      <ul class="pieces">
+        <li data-curtain><a href="https://www.annamariadesign.is/shop/silver/s-rings/silver-ring-bara-ii/"><img src="assets/img/p-bara2.jpg" alt="" width="900" height="1125" loading="lazy"><span class="curtain" aria-hidden="true"></span><span class="pc-name">Silver ring “Bára II”</span><span class="pc-meta">925s</span><span class="pc-price">kr. 22,000</span></a></li>
+        <li data-curtain><a href="https://www.annamariadesign.is/shop/silver/s-rings/silver-ring-wave-iv-with-cubic-zirconium/"><img src="assets/img/p-wave4.jpg" alt="" width="900" height="1125" loading="lazy"><span class="curtain" aria-hidden="true"></span><span class="pc-name">Silver ring “Wave IV” with cubic zirconium</span><span class="pc-meta">925s</span><span class="pc-price">kr. 24,000</span></a></li>
+        <li data-curtain><a href="https://www.annamariadesign.is/shop/gold/g-rings/gold-ring-with-pink-sapphire/"><img src="assets/img/p-pink.jpg" alt="" width="776" height="970" loading="lazy"><span class="curtain" aria-hidden="true"></span><span class="pc-name">Gold ring with pink sapphire</span><span class="pc-meta">14K gold</span><span class="pc-price">kr. 148,000</span></a></li>
+        <li data-curtain><a href="https://www.annamariadesign.is/shop/silver/earrings/silver-flow/"><img src="assets/img/p-flow.jpg" alt="" width="900" height="1125" loading="lazy"><span class="curtain" aria-hidden="true"></span><span class="pc-name">Silver Flow</span><span class="pc-meta">Earrings</span><span class="pc-price">kr. 29,000</span></a></li>
+        <li data-curtain><a href="https://www.annamariadesign.is/shop/silver/s-rings/silver-ring-wave-iii-with-cubic-zirconium/"><img src="assets/img/p-wave3.jpg" alt="" width="900" height="1125" loading="lazy"><span class="curtain" aria-hidden="true"></span><span class="pc-name">Silver ring “Wave III” with cubic zirconium</span><span class="pc-meta">925s</span><span class="pc-price">kr. 28,000</span></a></li>
+        <li data-curtain><a href="https://www.annamariadesign.is/shop/gold/g-rings/gold-ring-with-amethyst/"><img src="assets/img/p-amethyst.jpg" alt="" width="779" height="974" loading="lazy"><span class="curtain" aria-hidden="true"></span><span class="pc-name">Gold ring with amethyst</span><span class="pc-meta">14K gold</span><span class="pc-price">kr. 89,000</span></a></li>
+        <li data-curtain><a href="https://www.annamariadesign.is/shop/silver/earrings/silver-leaf-large/"><img src="assets/img/p-leaf.jpg" alt="" width="900" height="1125" loading="lazy"><span class="curtain" aria-hidden="true"></span><span class="pc-name">Silver Leaf large</span><span class="pc-meta">Earrings</span><span class="pc-price">kr. 17,000</span></a></li>
+        <li data-curtain><a href="https://www.annamariadesign.is/shop/gold/g-necklaces/handmade-gold-necklace-with-green-diamond-droplet/"><img src="assets/img/p-droplet.jpg" alt="" width="864" height="1080" loading="lazy"><span class="curtain" aria-hidden="true"></span><span class="pc-name">Gold necklace with green diamond “droplet”</span><span class="pc-meta">14K gold, green diamond 0.05 ct</span><span class="pc-price">kr. 134,000</span></a></li>
+      </ul>
+      <a class="shop-all" href="https://www.annamariadesign.is/shop/">THE WHOLE SHOP +</a>
+    </section>
+
+    <section class="visit" id="visit" aria-labelledby="visit-title">
+      <p class="label">VISIT +</p>
+      <h2 id="visit-title" translate="no" class="chars" aria-label="Skólavörðustígur 3">Skólavörðustígur 3</h2>
+      <div class="visit-grid">
+        <p>Anna María Design<br>Skólavörðustígur 3<br>101 Reykjavík</p>
+        <p><a href="tel:+3545510036">Tel. +354 551 0036</a><br><a href="mailto:annamaria@annamariadesign.is">annamaria@annamariadesign.is</a></p>
+        <p><a href="https://www.facebook.com/Anna-Mar%C3%ADa-Design-243083851448/">Find us on Facebook +</a><br><a href="https://www.google.com/maps/search/?api=1&amp;query=Sk%C3%B3lav%C3%B6r%C3%B0ust%C3%ADgur%203%2C%20101%20Reykjav%C3%ADk">Open in maps +</a></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="amd-footer">
+    <span>© Anna María Design</span>
+    <a class="sndr-credit" href="https://sndrstudio.is">Designed by SNDR Studio</a>
+  </footer>
+  <noscript><style>.loader,.black-wipe{display:none}</style></noscript>
+</body>
+</html>
