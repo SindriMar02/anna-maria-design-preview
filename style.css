@@ -15,14 +15,14 @@ h1,h2{text-wrap:balance}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 .amd-skip{position:fixed;left:8px;top:8px;z-index:20;background:#fff;padding:12px;transform:translateY(-160%)}.amd-skip:focus{transform:none}
 .lockup svg,.rail-name,#name-copy+.loader svg{fill:currentColor;font-family:var(--amd-serif);overflow:visible}
-.lockup svg text,.rail-name text,.logo-copy-mask svg text{font-family:var(--amd-serif)}
+.lockup svg text,.rail-name text,.logo-copy-mask svg text{font-family:var(--amd-serif);font-weight:400}
 
 /* ---------- Kove stage (desktop geometry from the reference, units of the stationary stage) ---------- */
 .pin{position:relative;height:430svh;background:var(--amd-ink)}
 .stage{position:sticky;top:0;width:100%;height:100svh;overflow:hidden;container-type:size;background:var(--amd-light);color:var(--amd-ink);isolation:isolate}
 .world{position:absolute;inset:0 auto 0 0;width:212.1cqw;display:flex;z-index:0}
 .hero{position:relative;width:57.4cqw;flex:none;height:100%;background:var(--amd-light)}
-.lockup{margin:0;line-height:0;color:var(--amd-ink)}
+.lockup{margin:0;line-height:0;color:var(--amd-ink);font-weight:400;font-synthesis:none}
 .lockup svg{width:100%;height:auto;display:block}
 .hero-wordmark{position:absolute;left:50%;top:50%;width:22cqw;transform:translate(-50%,-50%)}
 .hero-nav{position:absolute;left:2.1cqw;right:2.1cqw;top:3.8cqh;display:flex;justify-content:space-between;align-items:center;font-size:max(.68cqw,10px);letter-spacing:.06em;line-height:1;white-space:nowrap}
@@ -71,9 +71,12 @@ h1,h2{text-wrap:balance}
 .logo-band{position:absolute;left:0;width:100%;height:33.333%;overflow:hidden;color:var(--amd-light)}
 .band-top{top:0}.band-middle{top:33.333%;color:var(--amd-ink)}.band-bottom{top:66.666%}
 .band-light{position:absolute;inset:33.333% 0 auto;height:33.334%;background:var(--amd-light);transform-origin:center;transform:scaleY(0)}
-.logo-track{position:absolute;left:-82.4cqw;top:0;display:flex;gap:6.146cqw;width:max-content;height:100%;align-items:center}
+.logo-track{position:absolute;left:0;top:0;display:flex;gap:6.146cqw;width:max-content;height:100%;align-items:center}
 .logo-copy-mask{width:34.05cqw;height:100%;overflow:hidden;display:flex;align-items:center;justify-content:center;flex:none}
-.logo-copy-mask svg{width:min(30cqw,48cqh);height:auto;fill:currentColor;overflow:visible}
+.logo-copy-mask svg{width:100%;height:auto;fill:currentColor;overflow:visible}
+/* First paint of a first visit is already the loader's black: no flash of the hero before the script runs. */
+.amd-intro .loader{display:block}
+.amd-intro .amd-head{opacity:0}
 .loader-logo{position:absolute;left:50%;top:50%;width:22cqw;transform:translate(-50%,-50%);visibility:hidden}
 .loader-caption{position:absolute;left:50%;bottom:3.7cqh;transform:translateX(-50%);font-size:max(.62cqw,10px);letter-spacing:.06em;line-height:1.25;text-align:center;margin:0;opacity:0;color:var(--amd-ink)}
 
@@ -194,7 +197,6 @@ h1,h2{text-wrap:balance}
   .loader{position:fixed;inset:106px 0 0 0;z-index:12;container-type:size}
   .loader-logo{width:min(62vw,300px);top:calc(50% - 55px)}
   .loader-caption{display:none}
-  .logo-copy-mask svg{width:min(30cqw,60cqh)}
   .about{grid-template-columns:1fr;padding:72px 16px 80px;gap:36px}
   .about-photo{aspect-ratio:1.2}
   .facts{grid-template-columns:1fr;gap:16px}

@@ -20,8 +20,17 @@ let desktop=desktopQuery.matches, reduced=reducedQuery.matches;
 const SCROLL_MAP=[[0,0],[.30,1.5],[.38,2.33],[.68,4.0],[.80,5.42],[1,6.65]];
 const SCROLL_END=6.65, INTRO_FROM=6.8, MOBILE_INTRO_END=10.3;
 // The full loader is a first-arrival moment: once per session, never on reload mid-page or for reduced motion.
-let seen=false;try{seen=sessionStorage.getItem('amd-intro')==='1';sessionStorage.setItem('amd-intro','1');}catch(e){}
-let mode=(!reduced&&!seen&&scrollY<40)?'intro':'scroll';
+// The inline head script decides (before first paint, so the hero never flashes) and marks <html class="amd-intro">.
+const root=document.documentElement;
+try{sessionStorage.setItem('amd-intro','1');}catch(e){}
+let mode=root.classList.contains('amd-intro')&&!reduced?'intro':'scroll';
+if(mode!=='intro')root.classList.remove('amd-intro');
+// Hold on black until the name face and the first photographs are ready (max 2.5 s), so nothing swaps mid-animation.
+let ready=mode!=='intro';
+if(!ready){
+  const firstTiles=[...document.querySelectorAll('.photo-column img')].slice(0,6).map(i=>i.decode?i.decode().catch(()=>{}):null);
+  Promise.race([Promise.all([document.fonts.ready,...firstTiles]),new Promise(r=>setTimeout(r,2500))]).then(()=>{ready=true;last=0;paint();});
+}
 let t=mode==='intro'?INTRO_FROM:0, target=0, introSpeed=1, last=0, raf=0, w=0, h=0, vh=innerHeight, loaderFade=1;
 // Lenis smooth scroll: desktop with a fine pointer only (phones keep native scroll and the iOS toolbar).
 // It runs inside this file's single rAF loop; while it is active the stage follows its position directly.
@@ -29,7 +38,7 @@ const finePointer=matchMedia('(hover:hover) and (pointer:fine)');
 let lenis=null, lenisLast=0;
 function setupLenis(){
   const want=desktop&&finePointer.matches&&!reduced;
-  if(want&&!lenis){lenis=new Lenis({lerp:.075,smoothWheel:true,wheelMultiplier:.9,autoRaf:false,anchors:false});lenis.on('scroll',paint);}
+  if(want&&!lenis){lenis=new Lenis({lerp:.075,smoothWheel:true,wheelMultiplier:.9,autoRaf:false,anchors:false});lenis.on('scroll',paint);if(mode==='intro')lenis.stop();}
   else if(!want&&lenis){lenis.destroy();lenis=null;}
 }
 const tx=(el,x,y=0)=>{el.style.transform=`translate3d(${x}px,${y}px,0)`;};
@@ -52,18 +61,30 @@ const head=$('amd-head'), headName=$('head-name'), headLinks=[...head.querySelec
 const sections=headLinks.map(a=>$(a.dataset.sec));
 let headCurrent=null;
 
+// Loader geometry: every name copy is the lockup's own ANNA/MARIA at the lockup's exact size, and the middle track is
+// solved so its copy no. 2 stops dead centre on the lockup's name lines. Track speeds keep Kove's curves, scaled by k.
+const loaderLogo=$('loader-logo');let geo=null;
 function measure(){
   const r=(desktop?stage:loader).getBoundingClientRect();w=r.width||innerWidth;h=r.height||innerHeight;vh=innerHeight;
+  if(!loader.isConnected||!w)return;
+  const lw=loaderLogo.offsetWidth, H=loaderLogo.offsetHeight, gap=lw*.1805, k=lw/(GEOMETRY.logo*w);
+  const baseX=w/2-k*sample(LOGO_TRACK_MIDDLE,99)*w-2*(lw+gap)-lw/2;
+  // Lockup starts with its name block on the middle band's centre line, then lifts to its optical centre as the field opens.
+  const shift=loader.clientHeight/2-(loaderLogo.offsetTop-H/2+H*114/392);
+  geo={lw,gap,k,baseX,shift};
+  tracks.forEach(tr=>{tr.style.gap=gap+'px';});
+  copies.flat().forEach(svg=>{svg.parentElement.style.width=lw+'px';});
 }
 function drawLoader(time,s){
   loader.style.display=s.bands?'block':'none';
   if(!s.bands)return;
+  if(!geo||!geo.lw)measure();
   const middleScale=s.expansion>0?1+s.expansion*2:s.bandHeight;
   $('band-light').style.transform=`scaleY(${middleScale})`;
   // Names are sibling layers of the light field, so the field grows without stretching type.
   const topX=sample(LOGO_TRACK_TOP,time), middleX=sample(LOGO_TRACK_MIDDLE,time);
   tracks.forEach((track,row)=>{
-    tx(track,(row===1?middleX:topX-(row===2?.180392:0))*w);
+    tx(track,geo.baseX+geo.k*(row===1?middleX:topX-(row===2?.180392:0))*w);
     copies[row].forEach((svg,i)=>{
       const order=(i+6)%8;
       const enter=expoOut(progress(time,7.04+row*.11+order*.043,7.66+row*.11+order*.043));
@@ -73,6 +94,7 @@ function drawLoader(time,s){
   });
   $('loader-logo').style.visibility=time>=9.31?'visible':'hidden';
   op($('loader-logo'),s.logoResolve);
+  loaderLogo.style.transform=`translate(-50%,calc(-50% + ${geo.shift*(1-smooth(progress(time,9.47,10.05)))}px))`;
   op($('loader-caption'),smooth(progress(time,9.76,10.1)));
 }
 function drawDesktop(time){
@@ -106,7 +128,8 @@ function drawDesktop(time){
     $('hero-footer').querySelector('p').style.transform='translateX(-50%)';
     tx($('hero-footer').lastElementChild,0);
   }
-  op($('hero-nav'),s.heroUI);op($('hero-footer'),s.heroUI);
+  // The centre line is the loader caption's exact twin, so it stays; only the edge items and nav fade in.
+  op($('hero-nav'),s.heroUI);[...$('hero-footer').children].forEach(ch=>op(ch,ch.tagName==='P'?1:s.heroUI));
   hero.inert=s.pan>.35;
   $('collection').inert=!(s.pan>.9&&time<5.6);
 }
@@ -119,7 +142,8 @@ function drawHead(secRects,pinEnd){
   headName.style.transform=`translate3d(0,${(1-show)*170}%,0)`;
   head.querySelector('.head-name').tabIndex=show>.5?0:-1;
   // Bar mode once the stage has been wiped to black (or below the pin); tone = the section under the header's bottom edge.
-  const bar=!inPin||t>=6.6, hb=head.offsetHeight;
+  // Only in normal scrolling: during the intro the clock runs 6.8–12.2, which is NOT the end of the pin.
+  const bar=mode==='scroll'&&(!inPin||t>=6.6), hb=head.offsetHeight;
   head.classList.toggle('is-bar',bar);
   let light=false;if(bar)secRects.forEach((r,i)=>{if(r.top<=hb&&r.bottom>hb)light=sections[i].id!=='about';});
   head.classList.toggle('tone-light',light);
@@ -128,7 +152,7 @@ function drawHead(secRects,pinEnd){
   if(cur!==headCurrent){headCurrent?.removeAttribute('aria-current');cur?.setAttribute('aria-current','location');headCurrent=cur;}
 }
 function drawMobile(time,galleryRect,mob){
-  if(mode==='intro'){const s=stateAt(time);drawLoader(time,s);loader.style.display='block';}
+  if(mode==='intro'||mode==='hold'){const s=stateAt(time);drawLoader(time,s);loader.style.display='block';}
   op(loader,smooth(loaderFade));
   // iOS: a hidden-but-present fixed loader can keep tinting Safari's chrome; remove it once the intro is over.
   if(loaderFade<=0&&mode!=='intro'&&loader.isConnected)loader.remove();
@@ -165,10 +189,11 @@ function tick(now){
   // ---- clock ----
   let busy=false;
   if(mode==='intro'){
-    t+=dt*introSpeed;busy=true;
+    if(ready)t+=dt*introSpeed;busy=true;
     const end=desktop?DURATION:MOBILE_INTRO_END;
     if(t>=end){
       if(desktop){mode='scroll';t=0;}else{mode='scroll';t=end;}
+      root.classList.remove('amd-intro');lenis?.start();
     }
   }
   if(!desktop&&mode==='scroll'&&loaderFade>0){loaderFade=Math.max(0,loaderFade-dt/.45);busy=true;}
